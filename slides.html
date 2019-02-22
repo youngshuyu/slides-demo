@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- css中只有样式 -->
+<style type="text/css">
+*,ul,a{
+    margin:0;
+    padding:0;
+    border:0;
+    list-style:none;
+    text-decoration:none;
+}
+#banner_wrap{
+    width:400px;
+    height:300px;
+    margin:0 auto;
+    border:1px solid #c0a599;
+    margin-top:30px;
+    position:relative;
+    overflow:hidden;
+}
+#banner{
+    position:absolute;
+    height:300px;
+
+}
+.oLi{
+    width:400px;
+    height:300px;
+    float:left;
+}
+</style>
+<!-- 这里需要导入jQuery包,不然程序无法执行 -->
+<script type="text/javascript" src="./jquery-3.3.1.js"></script>
+<script type="text/javascript">
+//用到的是jQuery代码,不介绍代码单个意思
+$(function(){
+    //获取li的长度
+    var len=$(".oLi").length;
+    //把所有li的宽度算好,赋值给ul当宽度
+    $("#banner").width($(".oLi").eq(0).width()*len);
+    //id是为了后面的计时器暂停设置的
+    var id;
+    //index用来统计滚动次数
+    var index=0;
+    //启动计时器
+    id=setInterval(start,3000);
+    //给ul(#banner)添加hover选择器事件
+    $("#banner").hover(function(){
+        //鼠标进入的时候暂停
+        clearInterval(id);
+    },function(){
+        //鼠标离开的时候开始
+        id=setInterval(start,3000);
+    });
+    //计时器中执行的代码块
+    function start(){
+        //执行的时候次数++
+        index++;
+        //用animate设置ul的left属性,与左边的距离
+        $("#banner").animate({'left':-$(".oLi").eq(0).width()*(index%len)});
+        //实现无缝轮播的关键地方
+        //判断index%len的值index%len=0的时候表示第一张,那么len-1表示最后一张,
+        //最后一张与第一张一模一样,所有直接修改left属性
+        if(index%len==(len-1)){
+            $("#banner").animate({'left':0},0);
+            //同时给index+1跳过第一张图的再次加载
+            index++;
+        }
+        //实际的加载情况就是第一张,第二张,第三张,第四张,第五张(瞬间改变图片为第一张的,是一模一样的替换,不是滚动,看不出来,所以称之为无缝轮播),第二张...
+    }
+});
+</script>
+</head>
+<body>
+<div id="banner_wrap">
+    <ul id="banner">
+        <li class="oLi"><a href="#"><img alt="" src="./1.png"></a></li>
+        <li class="oLi"><a href="#"><img alt="" src="./2.png"></a></li>
+        <li class="oLi"><a href="#"><img alt="" src="./3.png"></a></li>
+        <li class="oLi"><a href="#"><img alt="" src="./4.png"></a></li>
+        <li class="oLi"><a href="#"><img alt="" src="./5.png"></a></li>
+    </ul>
+</div>
+</body>
+</html>
